@@ -1,259 +1,233 @@
-# 🤖 Sistema Multi-Agente - Economia Brasileira (CLI)
+# Sistema Multi-Agente CLI - Economia Brasileira
 
-Sistema inteligente baseado em **LangGraph** e **GPT-4o-mini** para análise econômica brasileira, com interface de linha de comando (CLI).
+Sistema inteligente de linha de comando com múltiplos agentes especializados para análise econômica, geração de gráficos e consultas climáticas sobre o Brasil.
 
-## 🎯 Funcionalidades
+![Multi-Agent CLI System Flow](image/multi-agent-sys-flow.jpg)
 
-### **🔍 Agente de Pesquisa Econômica**
-- Consulta dados oficiais do IBGE e Banco Central
-- Informações sobre PIB, indicadores econômicos
-- Análise de dados municipais e estaduais
-- Séries históricas econômicas
+## 📋 Descrição
 
-### **📊 Agente de Visualização**
-- Geração de gráficos históricos
-- Análises comparativas entre regiões
-- Visualizações de séries temporais
-- Criação automática de charts
+Sistema multi-agente desenvolvido em Python que processa consultas sobre economia brasileira através de agentes especializados que colaboram entre si. O sistema utiliza LangChain e modelos de linguagem (LLMs) para análise inteligente de consultas e roteamento automático para o agente mais adequado.
 
-### **🌤️ Agente Climático**
-- Informações meteorológicas atuais
-- Previsões do tempo por cidade
-- Dados climáticos brasileiros
-- Consultas regionais
+## ✨ Características Principais
 
-## 🚀 Instalação e Configuração
+- **🤖 Arquitetura Multi-Agente**: 3 agentes especializados trabalhando de forma coordenada
+- **🔍 Agente de Pesquisa**: Busca dados econômicos do IBGE e Banco Central
+- **📊 Agente de Gráficos**: Cria visualizações com Python/Matplotlib
+- **🌤️ Agente Climático**: Consulta informações meteorológicas
+- **🎯 Roteamento Inteligente**: Análise automática da intenção do usuário
+- **⚡ Sistema de Cache**: Otimização de consultas repetidas
+- **⏱️ Controle de Timeout**: Execução com timeout configurável (30s)
 
-### **Pré-requisitos**
-- Python 3.9+
-- Git (opcional)
-- Token do GitHub Models ou OpenAI API
+## 🏗️ Fluxo do Sistema
 
-### **1. Setup Automático**
+1. **User Question** → Usuário faz uma pergunta
+2. **Query Analyzer** → Sistema analisa a intenção da consulta
+3. **Router** → Roteia para o agente especializado apropriado
+4. **Agent Execution**:
+   - **Research Agent** → Busca web (DuckDuckGo, IBGE, BCB)
+   - **Chart Agent** → Execução Python/REPL para gráficos
+   - **Weather Agent** → Consulta APIs climáticas
+5. **Response Consolidation** → Resultados são consolidados
+6. **Cache** → Resposta é armazenada em cache
+7. **Final Response** → Retorno ao usuário
+
+## 🚀 Instalação
+
+### Pré-requisitos
+
+- Python 3.8+
+- Pip (gerenciador de pacotes Python)
+- Token de API (GitHub Models ou OpenAI)
+
+### Passos de Instalação
+
 ```bash
-# Dar permissão e executar setup
-chmod +x setup_cli.sh
-./setup_cli.sh
+# 1. Clone o repositório (ou baixe os arquivos)
+git clone <seu-repositorio>
+cd sistema-multi-agente
+
+# 2. Instale as dependências
+pip install -r requirements.txt
+
+# 3. Configure as variáveis de ambiente
+# Crie um arquivo .env na raiz do projeto
+echo "GITHUB_TOKEN=seu_token_aqui" > .env
+
+# Ou exporte diretamente (Linux/Mac)
+export GITHUB_TOKEN=seu_token_aqui
+
+# Ou no Windows
+set GITHUB_TOKEN=seu_token_aqui
 ```
 
-### **2. Configurar Credenciais**
-Edite o arquivo `.env`:
+## 📦 Dependências
+
+Principais bibliotecas utilizadas:
+
+- **langchain** (>= 0.3.25): Framework para LLMs
+- **langchain-openai** (>= 0.3.35): Integração com modelos OpenAI
+- **langgraph** (>= 1.0.1): Orquestração de grafos de agentes
+- **duckduckgo-search** (>= 6.4.0): Busca web
+- **matplotlib** (>= 3.8.0): Visualização de dados
+- **pandas** (>= 2.1.0): Análise de dados
+- **python-dotenv** (>= 1.0.1): Gerenciamento de variáveis de ambiente
+
+Veja o arquivo `requirements.txt` para a lista completa.
+
+## 💻 Uso
+
+### Iniciar o Sistema
+
+```bash
+python main.py
+```
+
+### Exemplos de Consultas
+
+**Pesquisa Econômica:**
+```
+🔮 Você: PIB Brasil 2023
+🔮 Você: População São Paulo
+🔮 Você: Economia Minas Gerais
+```
+
+**Gráficos:**
+```
+🔮 Você: Gráfico PIB últimos 5 anos
+🔮 Você: Visualizar crescimento econômico
+```
+
+**Clima:**
+```
+🔮 Você: Temperatura São Paulo
+🔮 Você: Clima Brasília hoje
+```
+
+### Comandos Especiais
+
+- `help` ou `ajuda` - Mostra menu de ajuda
+- `status` ou `info` - Status do sistema
+- `cache clear` - Limpa cache do sistema
+- `cache info` - Informações do cache
+- `clear` ou `limpar` - Limpa a tela
+- `quit`, `exit` ou `sair` - Sair do sistema
+
+## 📁 Estrutura do Projeto
+
+```
+├── main.py              # Script principal e interface CLI
+├── tools.py             # Ferramentas dos agentes (busca, Python REPL, APIs)
+├── prompts.py           # Prompts otimizados para cada agente
+├── utils.py             # Utilitários (cache, análise, validação)
+├── test_system.py       # Testes unitários e de integração
+├── requirements.txt     # Dependências do projeto
+└── README.md            # Este arquivo
+```
+
+### Descrição dos Módulos
+
+**main.py**
+- Sistema multi-agente principal
+- Interface CLI interativa
+- Gerenciamento de timeout e execução
+
+**tools.py**
+- `web_search_tool`: Busca web com DuckDuckGo
+- `python_repl_tool`: Execução de código Python
+- `ibge_data_tool`: Acesso à API do IBGE
+- `bcb_data_tool`: Acesso à API do Banco Central
+
+**prompts.py**
+- Prompts especializados para cada agente
+- Instruções de roteamento
+- Templates otimizados
+
+**utils.py**
+- `QueryAnalyzer`: Análise inteligente de consultas
+- `CacheManager`: Sistema de cache
+- `DataValidator`: Validação de dados
+- `ResponseFormatter`: Formatação de respostas
+
+## ⚙️ Configuração
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` com as seguintes variáveis:
+
 ```env
-# Token do GitHub Models (recomendado)
-GITHUB_TOKEN=ghp_seu_token_aqui
+# Token de API (obrigatório)
+GITHUB_TOKEN=seu_github_token
+# OU
+OPENAI_API_KEY=sua_openai_key
 
-# OU Token da OpenAI
-OPENAI_API_KEY=sk-sua_chave_aqui
-
-# Configurações do modelo
-MODEL_NAME=gpt-4o-mini
-MODEL_ENDPOINT=https://models.github.ai/inference
-MODEL_TEMPERATURE=0.3
+# Configurações opcionais (valores padrão)
+AGENT_TIMEOUT=30        # Timeout em segundos
+MAX_ITERATIONS=20       # Máximo de iterações por agente
+REQUEST_TIMEOUT=10      # Timeout para requests HTTP
 ```
 
-### **3. Executar o Sistema**
+### Obtendo Token de API
+
+**GitHub Models** (Recomendado):
+1. Acesse [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Gere um Personal Access Token
+3. Use como `GITHUB_TOKEN`
+
+**OpenAI**:
+1. Acesse [platform.openai.com](https://platform.openai.com/)
+2. Crie uma API Key
+3. Use como `OPENAI_API_KEY`
+
+## 🧪 Testes
+
+Execute os testes unitários:
+
 ```bash
-# Opção A: Script automático
-chmod +x run_cli.sh
-./run_cli.sh
+# Todos os testes
+pytest test_system.py -v
 
-# Opção B: Manual
-source venv/bin/activate
-python main_cli.py
+# Testes específicos
+pytest test_system.py::TestBrazilianEconomyAgentSystem -v
+
+# Com cobertura
+pytest test_system.py --cov=. --cov-report=html
 ```
-
-## 💬 Como Usar
-
-### **Interface de Linha de Comando**
-```
-🤖 SISTEMA MULTI-AGENTE - ECONOMIA BRASILEIRA
-========================================
-Sistema inteligente com agentes especializados:
-🔍 Pesquisa Econômica | 📊 Gráficos | 🌤️ Clima
-========================================
-
-💬 Digite suas perguntas (ou 'help' para ajuda, 'quit' para sair)
-------------------------------------------------------------
-
-🔮 Você: Qual o PIB do Brasil em 2023?
-```
-
-### **Exemplos de Consultas**
-
-#### **📊 Consultas Econômicas:**
-```
-🔮 Você: Qual o PIB do Brasil em 2023?
-🔮 Você: PIB per capita de São Paulo
-🔮 Você: Economia de Minas Gerais nos últimos 5 anos
-🔮 Você: Compare PIB de Rio de Janeiro e São Paulo
-```
-
-#### **📈 Gráficos e Visualizações:**
-```
-🔮 Você: Crie um gráfico do PIB brasileiro dos últimos 5 anos
-🔮 Você: Visualizar economia de Brasília
-🔮 Você: Gráfico comparativo de estados do Sudeste
-```
-
-#### **🌤️ Consultas Climáticas:**
-```
-🔮 Você: Como está o clima em São Paulo hoje?
-🔮 Você: Temperatura em Brasília agora
-🔮 Você: Previsão do tempo para o Rio de Janeiro
-```
-
-#### **🔄 Consultas Combinadas:**
-```
-🔮 Você: PIB de Salvador e clima atual da cidade
-🔮 Você: Economia de Curitiba, fazer gráfico e informar clima
-```
-
-### **⚙️ Comandos Especiais**
-```
-help/ajuda     - Mostra ajuda do sistema
-status/info    - Status e informações do sistema
-clear/limpar   - Limpa a tela
-cache clear    - Limpa cache do sistema
-cache info     - Informações do cache
-quit/exit/sair - Sair do sistema
-```
-
-## 🏗️ Arquitetura do Sistema
-
-### **Componentes Principais**
-```
-main_cli.py          # Interface CLI principal
-tools.py             # Ferramentas dos agentes
-prompts.py           # Prompts especializados
-utils.py             # Utilitários e cache
-requirements_cli.txt # Dependências (sem Streamlit)
-.env                 # Configurações
-```
-
-### **Fluxo Multi-Agente**
-```
-Consulta → Análise → Roteamento → Agente(s) → Processamento → Resposta
-    ↓         ↓          ↓            ↓           ↓             ↓
-  NLP     Intenção   Palavras    Research/    Ferramentas   Resultado
-         Confiança   -chave      Chart/       APIs/Tools    Formatado
-         Entidades              Weather      Python/Web
-```
-
-## 🛠️ Desenvolvimento
-
-### **Estrutura de Agentes**
-- **Research Agent**: Busca web + APIs oficiais (IBGE, BCB)
-- **Chart Agent**: Execução Python + Matplotlib/Seaborn  
-- **Weather Agent**: Dados meteorológicos + Previsões
-- **Router**: Análise de intenção e roteamento inteligente
-
-### **Executar Testes**
-```bash
-# Testes básicos
-python -m pytest test_system.py -v
-
-# Com coverage
-pip install pytest-cov
-python -m pytest test_system.py --cov=.
-```
-
-### **Debug e Logs**
-```bash
-# Modo debug
-export DEBUG_MODE=true
-export LOG_LEVEL=DEBUG
-python main_cli.py
-```
-
-## 📊 Performance
-
-### **Métricas Típicas**
-- **Tempo de resposta**: 2-8 segundos
-- **Taxa de sucesso**: 95%+
-- **Modelos suportados**: GPT-4o-mini, GPT-4o
-- **Cache TTL**: 30 minutos
-- **Concorrência**: Single-threaded
 
 ## 🔧 Solução de Problemas
 
-### **Erros Comuns**
+### Erro: "Token de API não configurado"
+**Solução**: Verifique se o arquivo `.env` existe e contém `GITHUB_TOKEN` ou `OPENAI_API_KEY`.
 
-#### **Token não configurado**
-```bash
-❌ Token de API não configurado!
-# Solução: Configure GITHUB_TOKEN no .env
-```
+### Erro: "Module not found"
+**Solução**: Instale as dependências com `pip install -r requirements.txt`
 
-#### **Modelo indisponível**
-```bash
-❌ Error code: 400 - unavailable model
-# Solução: Use gpt-4o-mini ou configure OpenAI API
-```
+### Timeout nas consultas
+**Solução**: Consultas complexas podem exceder o timeout. Tente:
+- Fazer perguntas mais específicas
+- Aumentar `AGENT_TIMEOUT` no `.env`
+- Verificar conexão com internet
 
-#### **Dependências faltando**
-```bash
-❌ ImportError: No module named 'langchain'
-# Solução: Execute ./setup_cli.sh novamente
-```
+### Erro de busca web
+**Solução**: O DuckDuckGo pode ter limitações de rate. Aguarde alguns segundos e tente novamente.
 
-### **Verificações de Diagnóstico**
-```bash
-# Testar configuração
-python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('Token OK' if os.getenv('GITHUB_TOKEN') else 'Token faltando')"
+## 🎯 Performance
 
-# Testar imports
-python -c "import langchain_openai, langgraph; print('✅ Imports OK')"
+- **Timeout por agente**: 30 segundos (configurável)
+- **Máximo de iterações**: 20 por consulta
+- **Cache**: 30 minutos de TTL
+- **Request timeout**: 10 segundos
 
-# Testar modelo
-python test_model_access.py
-```
+## 📝 Licença
 
-## 📚 Recursos Adicionais
+Este projeto é fornecido como está, para fins educacionais e de pesquisa.
 
-### **Documentação Técnica**
-- [LangGraph Documentation](https://python.langchain.com/docs/langgraph)
-- [GitHub Models](https://github.com/marketplace/models)
-- [OpenAI API](https://platform.openai.com/docs)
+## 🤝 Contribuições
 
-### **APIs Utilizadas**
-- **IBGE**: Dados municipais e regionais
-- **Banco Central**: Séries temporais econômicas
-- **DuckDuckGo**: Busca web geral
-- **GitHub Models**: Acesso ao GPT-4o-mini
+Sugestões e melhorias são bem-vindas! Para contribuir:
 
-## 🤝 Contribuição
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+4. Push para a branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
 
-### **Como Contribuir**
-1. Fork do repositório
-2. Crie branch para feature (`git checkout -b feature/nova-funcionalidade`)
-3. Commit das mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Push para branch (`git push origin feature/nova-funcionalidade`)
-5. Abra Pull Request
-
-### **Desenvolvimento Local**
-```bash
-# Clone e setup
-git clone <repo>
-cd sistema-multi-agente-cli
-./setup_cli.sh
-
-# Executar em modo desenvolvimento
-export DEBUG_MODE=true
-python main_cli.py
-```
-
-## 📄 Licença
-
-Este projeto está sob licença MIT. Veja o arquivo `LICENSE` para detalhes.
-
-## 🙋 Suporte
-
-Para dúvidas e problemas:
-1. Consulte este README
-2. Execute `python main_cli.py` e digite `help`
-3. Verifique os logs de erro
-4. Abra uma issue no repositório
-
----
-
-**Desenvolvido com ❤️ usando LangGraph, GPT-4o-mini e Python**
